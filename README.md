@@ -1,12 +1,14 @@
 # Weather API
 
-This project demonstrates how to create a simple Weather API using .NET Core. The API calls the OpenWeatherMap API to get the weather data for a specified city. The Weather API expects the latitude and longitude of the city as input and returns the weather data for that city. The Geolocation API is used to get the latitude and longitude of the city. 
+This project demonstrates how to create a simple Weather API using .NET Core. The API uses OpenWeatherMap API to get weather information. The OpenWeatherMap API expects the latitude and longitude of the city as inputs. The Geolocation API is used to convert the city and country to latitude and longitude.
+
+The frontend application is a simple React application that calls the Weather API.
+The frontend application provides input field to enter the API key. This should allow the user to test the API with different API keys to verify the working of the API key validation and Rate Limiting middlewares.
 
 The Weather API uses custom middlewares to validate the API key and to implement Rate Limiting. 
 These requirements are usually implemented using cloud services like Azure API Management when the API is deployed to the cloud. Azure API Management provides features like API key validation, Rate Limiting, and caching out of the box.
 
-The frontend application is a simple React application that calls the Weather API to get the weather data for a specified city and country.
-The frontend application also provides input field to enter the API key. This should allow the user to test the API with different API keys to verify the working of the API key validation and Rate Limiting middlewares.
+
 
 ## Running the Application
 
@@ -48,7 +50,7 @@ After starting the frontend and backend applications, you can test the Weather A
 
 1. Enter the city and country for which you want to get the weather data. 
 2. Enter the API key in the input field.  The API keys are listed in the `appsettings.json` file. If you don't pass the API key, the API will return a `401 Unauthorized` response. The application uses middleware to validate the API key. For simplicity, the API key is hardcoded in the `appsettings.json` file. In a production environment, the API key should be stored in a secure location like Azure Key Vault.
-3. Click the `Get Weather` button. The frontend application will call the Weather API and display the weather data for the specified city. The weather API will internally call the OpenWeatherMap API to get the weather data for the specified city. The Weather API will return only the `Description` field from the OpenWeatherMap API response.
+3. Click the `Get Weather` button. The frontend application will call the Weather API and display the weather data for the specified city. The weather API will internally call the OpenWeatherMap API to get the weather data. The Weather API will return only the `Description` field from the OpenWeatherMap API response.
 
 ```` json
 {
@@ -98,6 +100,9 @@ After starting the frontend and backend applications, you can test the Weather A
 
 Here is a screenshot of the frontend application with a successful response from the Weather API:
 
+![Weather API - Success Response](./docs/images/frontend_success_response.png)
+
+
 4. The API also uses Rate Limiting as per the requirements. If the number of requests exceeds the limit, the API will return a `429 Too Many Requests` response. You can test this by sending more than the maximum number of requests in a hour which is 5.
 
 The Rate limiting is implemented using a custom middleware. The middleware checks the number of requests made by the client in the last hour and if the number of requests exceeds the limit, it will return a `429 Too Many Requests` response. The number of requests is stored in the cache and the cache is cleared every hour. An in-memory cache is used for this purpose. In a production environment, a distributed cache like Redis should be used.
@@ -105,13 +110,8 @@ The Rate limiting is implemented using a custom middleware. The middleware check
 ![Weather API - Error Response](./docs/images/frontend_error_response.png)
 
 
-
-You can also test the Weather API using `curl` or any other API testing tool like Postman.
-Follow the steps below to test the Weather API using `curl`:
-
-1. Open your terminal.
-
-2. Use the following `curl` command to call the Weather API. Replace `your-api-key` with actual API key and `city,country` with the city and country for which you want to get the weather data. The API keys are listed in the `appsettings.json` file.
+5. You can also test the Weather API using `curl` or any other API testing tool like Postman.
+Use the following `curl` command to call the Weather API. Replace `your-api-key` with actual API key and `city,country` with the city and country for which you want to get the weather data.
 
 ```` cli
 curl GET "http://localhost:5150/weather?q=city,country&appid=your-api-key"
